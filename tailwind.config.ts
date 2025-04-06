@@ -11,8 +11,24 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: {
+          DEFAULT: "#576238",
+        },
+        secondary: {
+          DEFAULT: "#FFD95D",
+        },
+        accent: {
+          DEFAULT: "#98473E",
+        },
+        base: {
+          DEFAULT: "#F0EADC",
+        },
+        muted: {
+          DEFAULT: "#07090F",
+        },
       },
     },
   },
   plugins: [],
 } satisfies Config;
+

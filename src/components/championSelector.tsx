@@ -132,7 +132,7 @@ export default function ChampionSelector({ onSelection }: ChampionSelectorProps)
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow mt-6 text-black">
+    <div className="bg-white p-6 rounded-lg shadow mt-6 text-muted">
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -145,13 +145,12 @@ export default function ChampionSelector({ onSelection }: ChampionSelectorProps)
         <div className="max-h-60 overflow-y-auto border p-2 mb-4 grid grid-cols-2 gap-2">
           {filteredChampions.map((champion) => (
             <div key={champion.id} className="flex items-center">
+              <input
+                type="checkbox"
+                checked={selectedChampions.includes(champion.displayName)}
+                onChange={() => handleCheckboxChange(champion.displayName)}
+                className="mr-2 peer accent-accent"/>
               <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedChampions.includes(champion.displayName)}
-                  onChange={() => handleCheckboxChange(champion.displayName)}
-                  className="mr-2"
-                />
                 <img
                   src={champion.iconUrl}
                   alt={champion.displayName}
@@ -168,13 +167,13 @@ export default function ChampionSelector({ onSelection }: ChampionSelectorProps)
         <div className="flex gap-2">
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-secondary text-muted px-4 py-2 rounded hover:bg-accent hover:text-base"
         >
           Submit
           </button>
           <button
             onClick={handleSkidSelection}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-secondary text-muted px-4 py-2 rounded hover:bg-accent hover:text-base"
         >
         {`Skid's Selection`}
           </button>
