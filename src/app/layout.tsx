@@ -15,10 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Bot Diff Bot Stats",
   description: "A website for viewing bot diff bot stats",
-  icons:
-  {
-      icon: "/favicon.ico",
-    }
 
 };
 
