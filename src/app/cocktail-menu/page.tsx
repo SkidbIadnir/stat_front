@@ -1,0 +1,346 @@
+"use client";
+
+import { useState } from "react";
+
+interface Cocktail {
+  id: number;
+  name: string;
+  description: {
+    en: string;
+    fr: string;
+  };
+  ingredients: {
+    en: string[];
+    fr: string[];
+  };
+  price?: string;
+  category: 'classic' | 'signature' | 'mocktail';
+  isAlcoholic: boolean;
+  image: string;
+}
+
+const mockCocktails: Cocktail[] = [
+  {
+    id: 1,
+    name: "Old Fashioned",
+    description: {
+      en: "A timeless classic with bourbon, sugar, and bitters",
+      fr: "Un classique intemporel avec bourbon, sucre et amers"
+    },
+    ingredients: {
+      en: ["Bourbon whiskey", "Sugar cube", "Angostura bitters", "Orange peel"],
+      fr: ["Whisky bourbon", "Cube de sucre", "Amers d'Angostura", "Zeste d'orange"]
+    },
+    category: "classic",
+    isAlcoholic: true,
+    image: "🥃"
+  },
+  {
+    id: 2,
+    name: "Mojito",
+    description: {
+      en: "Fresh and minty Cuban cocktail with white rum",
+      fr: "Cocktail cubain frais et mentholé au rhum blanc"
+    },
+    ingredients: {
+      en: ["White rum", "Fresh mint leaves", "Lime juice", "Sugar", "Soda water"],
+      fr: ["Rhum blanc", "Feuilles de menthe fraîche", "Jus de citron vert", "Sucre", "Eau gazeuse"]
+    },
+    category: "classic",
+    isAlcoholic: true,
+    image: "🍸"
+  },
+  {
+    id: 3,
+    name: "Aperol Spritz",
+    description: {
+      en: "Light and refreshing Italian aperitif",
+      fr: "Apéritif italien léger et rafraîchissant"
+    },
+    ingredients: {
+      en: ["Aperol", "Prosecco", "Soda water", "Orange slice"],
+      fr: ["Aperol", "Prosecco", "Eau gazeuse", "Tranche d'orange"]
+    },
+    category: "classic",
+    isAlcoholic: true,
+    image: "🍊"
+  },
+  {
+    id: 4,
+    name: "Family Sunset",
+    description: {
+      en: "Our signature blend of tropical flavors",
+      fr: "Notre mélange signature de saveurs tropicales"
+    },
+    ingredients: {
+      en: ["Pineapple juice", "Coconut rum", "Grenadine", "Lime juice", "Orange wheel"],
+      fr: ["Jus d'ananas", "Rhum à la noix de coco", "Grenadine", "Jus de citron vert", "Rondelle d'orange"]
+    },
+    category: "signature",
+    isAlcoholic: true,
+    image: "🌅"
+  },
+  {
+    id: 5,
+    name: "Garden Gimlet",
+    description: {
+      en: "Herb-infused gin cocktail with cucumber",
+      fr: "Cocktail au gin infusé aux herbes avec concombre"
+    },
+    ingredients: {
+      en: ["Gin", "Fresh cucumber", "Basil leaves", "Lime juice", "Simple syrup"],
+      fr: ["Gin", "Concombre frais", "Feuilles de basilic", "Jus de citron vert", "Sirop simple"]
+    },
+    category: "signature",
+    isAlcoholic: true,
+    image: "🌿"
+  },
+  {
+    id: 6,
+    name: "Spiced Pear Fizz",
+    description: {
+      en: "Autumn-inspired cocktail with warm spices",
+      fr: "Cocktail d'automne aux épices chaleureuses"
+    },
+    ingredients: {
+      en: ["Pear brandy", "Cinnamon syrup", "Lemon juice", "Ginger beer", "Star anise"],
+      fr: ["Eau-de-vie de poire", "Sirop à la cannelle", "Jus de citron", "Bière au gingembre", "Anis étoilé"]
+    },
+    category: "signature",
+    isAlcoholic: true,
+    image: "🍐"
+  },
+  {
+    id: 7,
+    name: "Virgin Mojito",
+    description: {
+      en: "All the refreshing taste without the alcohol",
+      fr: "Tout le goût rafraîchissant sans l'alcool"
+    },
+    ingredients: {
+      en: ["Fresh mint leaves", "Lime juice", "Sugar", "Soda water", "Lime wheel"],
+      fr: ["Feuilles de menthe fraîche", "Jus de citron vert", "Sucre", "Eau gazeuse", "Rondelle de citron vert"]
+    },
+    category: "mocktail",
+    isAlcoholic: false,
+    image: "🌱"
+  },
+  {
+    id: 8,
+    name: "Sparkling Berry Lemonade",
+    description: {
+      en: "Fresh berries mixed with tangy lemonade",
+      fr: "Baies fraîches mélangées à une limonade acidulée"
+    },
+    ingredients: {
+      en: ["Mixed berries", "Lemon juice", "Simple syrup", "Sparkling water", "Fresh berries"],
+      fr: ["Baies mélangées", "Jus de citron", "Sirop simple", "Eau pétillante", "Baies fraîches"]
+    },
+    category: "mocktail",
+    isAlcoholic: false,
+    image: "🫐"
+  },
+  {
+    id: 9,
+    name: "Cucumber Mint Cooler",
+    description: {
+      en: "Refreshing and hydrating summer drink",
+      fr: "Boisson d'été rafraîchissante et hydratante"
+    },
+    ingredients: {
+      en: ["Fresh cucumber", "Mint leaves", "Lime juice", "Honey", "Sparkling water"],
+      fr: ["Concombre frais", "Feuilles de menthe", "Jus de citron vert", "Miel", "Eau pétillante"]
+    },
+    category: "mocktail",
+    isAlcoholic: false,
+    image: "🥒"
+  }
+];
+
+export default function CocktailMenu() {
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'classic' | 'signature' | 'mocktail'>('all');
+  const [language, setLanguage] = useState<'en' | 'fr'>('en');
+
+  const filteredCocktails = selectedCategory === 'all' 
+    ? mockCocktails 
+    : mockCocktails.filter(cocktail => cocktail.category === selectedCategory);
+
+  const categoryLabels = {
+    en: {
+      all: 'All Drinks',
+      classic: 'Classic Cocktails',
+      signature: 'Signature Creations',
+      mocktail: 'Non-Alcoholic'
+    },
+    fr: {
+      all: 'Toutes les Boissons',
+      classic: 'Cocktails Classiques',
+      signature: 'Créations Signature',
+      mocktail: 'Sans Alcool'
+    }
+  };
+
+  const labels = {
+    en: {
+      title: 'Family Cocktail Menu',
+      subtitle: 'Carefully crafted drinks for our special gathering. Each cocktail is made with love and the finest ingredients.',
+      ingredients: 'Ingredients',
+      alcoholic: 'Alcoholic',
+      nonAlcoholic: 'Non-Alcoholic',
+      footerTitle: 'Cheers to Family!',
+      footerText: 'All cocktails are prepared fresh to order. Please let us know about any allergies or dietary restrictions.',
+      footerQuote: '"Good friends, good drinks, good times - that\'s what family gatherings are all about!"'
+    },
+    fr: {
+      title: 'Menu Cocktails Familial',
+      subtitle: 'Boissons soigneusement préparées pour notre rassemblement spécial. Chaque cocktail est fait avec amour et les meilleurs ingrédients.',
+      ingredients: 'Ingrédients',
+      alcoholic: 'Alcoolisé',
+      nonAlcoholic: 'Sans Alcool',
+      footerTitle: 'Santé à la Famille !',
+      footerText: 'Tous les cocktails sont préparés frais à la commande. N\'hésitez pas à nous faire savoir si vous avez des allergies ou des restrictions alimentaires.',
+      footerQuote: '"Bons amis, bonnes boissons, bons moments - c\'est ça l\'esprit des rassemblements familiaux !"'
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          {/* Language Toggle */}
+          <div className="flex justify-center gap-2 mb-6">
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                language === 'en'
+                  ? 'bg-amber-500 text-white shadow-md'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600'
+              }`}
+            >
+              🇺🇸 English
+            </button>
+            <button
+              onClick={() => setLanguage('fr')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                language === 'fr'
+                  ? 'bg-amber-500 text-white shadow-md'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600'
+              }`}
+            >
+              🇫🇷 Français
+            </button>
+          </div>
+
+          <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-4">
+            🍹 {labels[language].title}
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            {labels[language].subtitle}
+          </p>
+          <div className="mt-6 w-24 h-1 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full"></div>
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {Object.entries(categoryLabels[language]).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setSelectedCategory(key as 'all' | 'classic' | 'signature' | 'mocktail')}
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                selectedCategory === key
+                  ? 'bg-amber-500 text-white shadow-lg transform scale-105'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-gray-600 shadow-md'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Cocktail Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredCocktails.map((cocktail) => (
+            <div 
+              key={cocktail.id} 
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              {/* Cocktail Image */}
+              <div className="h-24 flex items-center justify-center text-6xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600">
+                {cocktail.image}
+              </div>
+
+              {/* Card Header */}
+              <div className={`p-6 ${
+                cocktail.category === 'classic' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
+                cocktail.category === 'signature' ? 'bg-gradient-to-r from-purple-500 to-pink-600' :
+                'bg-gradient-to-r from-green-500 to-emerald-600'
+              }`}>
+                <div className="flex justify-between items-start">
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {cocktail.name}
+                  </h3>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    cocktail.isAlcoholic 
+                      ? 'bg-red-100 text-red-800' 
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {cocktail.isAlcoholic ? labels[language].alcoholic : labels[language].nonAlcoholic}
+                  </span>
+                </div>
+                <p className="text-white/90 text-sm">
+                  {cocktail.description[language]}
+                </p>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-6">
+                <h4 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
+                  <span className="mr-2">📋</span>
+                  {labels[language].ingredients}
+                </h4>
+                <ul className="space-y-2">
+                  {cocktail.ingredients[language].map((ingredient, index) => (
+                    <li 
+                      key={index} 
+                      className="flex items-center text-gray-600 dark:text-gray-300"
+                    >
+                      <span className="w-2 h-2 bg-amber-400 rounded-full mr-3 flex-shrink-0"></span>
+                      {ingredient}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Card Footer */}
+              <div className="px-6 pb-6">
+                <div className={`inline-flex px-4 py-2 rounded-full text-sm font-medium ${
+                  cocktail.category === 'classic' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
+                  cocktail.category === 'signature' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' :
+                  'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                }`}>
+                  {categoryLabels[language][cocktail.category]}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer Note */}
+        <div className="text-center mt-16">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+              🎉 {labels[language].footerTitle}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              {labels[language].footerText}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+              {labels[language].footerQuote}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
