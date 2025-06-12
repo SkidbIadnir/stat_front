@@ -160,10 +160,59 @@ const mockCocktails: Cocktail[] = [
 export default function CocktailMenu() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'classic' | 'signature' | 'mocktail'>('all');
   const [language, setLanguage] = useState<'en' | 'fr'>('en');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCocktail, setSelectedCocktail] = useState<string>('');
+  const [customerName, setCustomerName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const filteredCocktails = selectedCategory === 'all' 
     ? mockCocktails 
     : mockCocktails.filter(cocktail => cocktail.category === selectedCategory);
+
+  const openOrderModal = (cocktailName: string) => {
+    setSelectedCocktail(cocktailName);
+    setIsModalOpen(true);
+    setCustomerName('');
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedCocktail('');
+    setCustomerName('');
+    setIsSubmitting(false);
+  };
+
+  const handleOrderSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customerName.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('https://api.skidhub.fr/stats/cocktail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          clientName: customerName.trim(),
+          cocktailName: selectedCocktail
+        }),
+      });
+
+      if (response.ok) {
+        closeModal();
+        // You could add a success message here
+        alert(language === 'en' ? 'Order placed successfully!' : 'Commande passée avec succès !');
+      } else {
+        throw new Error('Failed to place order');
+      }
+    } catch (error) {
+      console.error('Error placing order:', error);
+      alert(language === 'en' ? 'Failed to place order. Please try again.' : 'Échec de la commande. Veuillez réessayer.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const categoryLabels = {
     en: {
@@ -187,6 +236,12 @@ export default function CocktailMenu() {
       ingredients: 'Ingredients',
       alcoholic: 'Alcoholic',
       nonAlcoholic: 'Non-Alcoholic',
+      orderNow: 'Order Now',
+      orderFor: 'Order for',
+      customerName: 'Customer Name',
+      enterName: 'Enter your name',
+      cancel: 'Cancel',
+      submitOrder: 'Submit Order',
       footerTitle: 'Cheers to Family!',
       footerText: 'All cocktails are prepared fresh to order. Please let us know about any allergies or dietary restrictions.',
       footerQuote: '"Good friends, good drinks, good times - that\'s what family gatherings are all about!"'
@@ -197,6 +252,12 @@ export default function CocktailMenu() {
       ingredients: 'Ingrédients',
       alcoholic: 'Alcoolisé',
       nonAlcoholic: 'Sans Alcool',
+      orderNow: 'Commander',
+      orderFor: 'Commander pour',
+      customerName: 'Nom du client',
+      enterName: 'Entrez votre nom',
+      cancel: 'Annuler',
+      submitOrder: 'Confirmer',
       footerTitle: 'Santé à la Famille !',
       footerText: 'Tous les cocktails sont préparés frais à la commande. N\'hésitez pas à nous faire savoir si vous avez des allergies ou des restrictions alimentaires.',
       footerQuote: '"Bons amis, bonnes boissons, bons moments - c\'est ça l\'esprit des rassemblements familiaux !"'
@@ -314,12 +375,20 @@ export default function CocktailMenu() {
 
               {/* Card Footer */}
               <div className="px-6 pb-6">
-                <div className={`inline-flex px-4 py-2 rounded-full text-sm font-medium ${
-                  cocktail.category === 'classic' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
-                  cocktail.category === 'signature' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' :
-                  'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                }`}>
-                  {categoryLabels[language][cocktail.category]}
+                <div className="flex items-center justify-between">
+                  <div className={`inline-flex px-4 py-2 rounded-full text-sm font-medium ${
+                    cocktail.category === 'classic' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :
+                    cocktail.category === 'signature' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' :
+                    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                  }`}>
+                    {categoryLabels[language][cocktail.category]}
+                  </div>
+                  <button
+                    onClick={() => openOrderModal(cocktail.name)}
+                    className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-md"
+                  >
+                    {labels[language].orderNow}
+                  </button>
                 </div>
               </div>
             </div>
@@ -340,6 +409,58 @@ export default function CocktailMenu() {
             </p>
           </div>
         </div>
+
+        {/* Order Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full">
+              <div className="p-6">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+                  {labels[language].orderFor} {selectedCocktail}
+                </h3>
+                
+                <form onSubmit={handleOrderSubmit}>
+                  <div className="mb-6">
+                    <label 
+                      htmlFor="customerName" 
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      {labels[language].customerName}
+                    </label>
+                    <input
+                      type="text"
+                      id="customerName"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      placeholder={labels[language].enterName}
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={closeModal}
+                      className="flex-1 px-4 py-3 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+                      disabled={isSubmitting}
+                    >
+                      {labels[language].cancel}
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isSubmitting || !customerName.trim()}
+                    >
+                      {isSubmitting ? '...' : labels[language].submitOrder}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
