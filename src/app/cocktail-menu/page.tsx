@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface Cocktail {
   id: number;
@@ -33,7 +34,7 @@ const mockCocktails: Cocktail[] = [
     },
     category: "classic",
     isAlcoholic: true,
-    image: "🥃"
+    image: "/images/cocktails/old-fashioned.png"
   },
   {
     id: 2,
@@ -48,53 +49,68 @@ const mockCocktails: Cocktail[] = [
     },
     category: "classic",
     isAlcoholic: true,
-    image: "🍸"
+    image: "/images/cocktails/mojito.png"
   },
   {
     id: 3,
-    name: "Aperol Spritz",
+    name: "Margarita",
     description: {
-      en: "Light and refreshing Italian aperitif",
-      fr: "Apéritif italien léger et rafraîchissant"
+      en: "A zesty blend of tequila, lime, and orange liqueur",
+      fr: "Un mélange zesté de tequila, citron vert et liqueur d'orange"
     },
     ingredients: {
-      en: ["Aperol", "Prosecco", "Soda water", "Orange slice"],
-      fr: ["Aperol", "Prosecco", "Eau gazeuse", "Tranche d'orange"]
+      en: ["Tequila", "Lime juice", "Triple sec", "Salt rim"],
+      fr: ["Tequila", "Jus de citron vert", "Triple sec", "Bordure de sel"]
     },
     category: "classic",
     isAlcoholic: true,
-    image: "🍊"
+    image: "/images/cocktails/margarita.png"
   },
-  {
-    id: 4,
-    name: "Family Sunset",
-    description: {
-      en: "Our signature blend of tropical flavors",
-      fr: "Notre mélange signature de saveurs tropicales"
-    },
-    ingredients: {
-      en: ["Pineapple juice", "Coconut rum", "Grenadine", "Lime juice", "Orange wheel"],
-      fr: ["Jus d'ananas", "Rhum à la noix de coco", "Grenadine", "Jus de citron vert", "Rondelle d'orange"]
-    },
-    category: "signature",
-    isAlcoholic: true,
-    image: "🌅"
-  },
-  {
-    id: 5,
-    name: "Garden Gimlet",
-    description: {
-      en: "Herb-infused gin cocktail with cucumber",
-      fr: "Cocktail au gin infusé aux herbes avec concombre"
-    },
-    ingredients: {
-      en: ["Gin", "Fresh cucumber", "Basil leaves", "Lime juice", "Simple syrup"],
-      fr: ["Gin", "Concombre frais", "Feuilles de basilic", "Jus de citron vert", "Sirop simple"]
-    },
-    category: "signature",
-    isAlcoholic: true,
-    image: "🌿"
-  },
+  // {
+  //   id: 3,
+  //   name: "Aperol Spritz",
+  //   description: {
+  //     en: "Light and refreshing Italian aperitif",
+  //     fr: "Apéritif italien léger et rafraîchissant"
+  //   },
+  //   ingredients: {
+  //     en: ["Aperol", "Prosecco", "Soda water", "Orange slice"],
+  //     fr: ["Aperol", "Prosecco", "Eau gazeuse", "Tranche d'orange"]
+  //   },
+  //   category: "classic",
+  //   isAlcoholic: true,
+  //   image: "🍊"
+  // },
+  // {
+  //   id: 4,
+  //   name: "Family Sunset",
+  //   description: {
+  //     en: "Our signature blend of tropical flavors",
+  //     fr: "Notre mélange signature de saveurs tropicales"
+  //   },
+  //   ingredients: {
+  //     en: ["Pineapple juice", "Coconut rum", "Grenadine", "Lime juice", "Orange wheel"],
+  //     fr: ["Jus d'ananas", "Rhum à la noix de coco", "Grenadine", "Jus de citron vert", "Rondelle d'orange"]
+  //   },
+  //   category: "signature",
+  //   isAlcoholic: true,
+  //   image: "🌅"
+  // },
+  // {
+  //   id: 5,
+  //   name: "Garden Gimlet",
+  //   description: {
+  //     en: "Herb-infused gin cocktail with cucumber",
+  //     fr: "Cocktail au gin infusé aux herbes avec concombre"
+  //   },
+  //   ingredients: {
+  //     en: ["Gin", "Fresh cucumber", "Basil leaves", "Lime juice", "Simple syrup"],
+  //     fr: ["Gin", "Concombre frais", "Feuilles de basilic", "Jus de citron vert", "Sirop simple"]
+  //   },
+  //   category: "signature",
+  //   isAlcoholic: true,
+  //   image: "🌿"
+  // },
   {
     id: 6,
     name: "Spiced Pear Fizz",
@@ -108,10 +124,25 @@ const mockCocktails: Cocktail[] = [
     },
     category: "signature",
     isAlcoholic: true,
-    image: "🍐"
+    image: "/images/cocktails/spiced-pear-fizz.png"
   },
   {
     id: 7,
+    name: "Elderflower Gin Fizz",
+    description: {
+      en: "Refreshing gin cocktail with elderflower liqueur",
+      fr: "Cocktail de gin rafraîchissant avec liqueur de fleur de sureau"
+    },
+    ingredients: {
+      en: ["Gin", "Elderflower liqueur", "Lime juice", "Soda water", "Lime wheel"],
+      fr: ["Gin", "Liqueur de fleur de sureau", "Jus de citron vert", "Eau gazeuse", "Rondelle de citron vert"]
+    },
+    category: "signature",
+    isAlcoholic: true,
+    image: "/images/cocktails/elderflower-gin-fizz.png"
+  },
+  {
+    id: 8,
     name: "Virgin Mojito",
     description: {
       en: "All the refreshing taste without the alcohol",
@@ -123,38 +154,38 @@ const mockCocktails: Cocktail[] = [
     },
     category: "mocktail",
     isAlcoholic: false,
-    image: "🌱"
+    image: "/images/cocktails/mojito.png"
   },
-  {
-    id: 8,
-    name: "Sparkling Berry Lemonade",
-    description: {
-      en: "Fresh berries mixed with tangy lemonade",
-      fr: "Baies fraîches mélangées à une limonade acidulée"
-    },
-    ingredients: {
-      en: ["Mixed berries", "Lemon juice", "Simple syrup", "Sparkling water", "Fresh berries"],
-      fr: ["Baies mélangées", "Jus de citron", "Sirop simple", "Eau pétillante", "Baies fraîches"]
-    },
-    category: "mocktail",
-    isAlcoholic: false,
-    image: "🫐"
-  },
-  {
-    id: 9,
-    name: "Cucumber Mint Cooler",
-    description: {
-      en: "Refreshing and hydrating summer drink",
-      fr: "Boisson d'été rafraîchissante et hydratante"
-    },
-    ingredients: {
-      en: ["Fresh cucumber", "Mint leaves", "Lime juice", "Honey", "Sparkling water"],
-      fr: ["Concombre frais", "Feuilles de menthe", "Jus de citron vert", "Miel", "Eau pétillante"]
-    },
-    category: "mocktail",
-    isAlcoholic: false,
-    image: "🥒"
-  }
+  // {
+  //   id: 8,
+  //   name: "Sparkling Berry Lemonade",
+  //   description: {
+  //     en: "Fresh berries mixed with tangy lemonade",
+  //     fr: "Baies fraîches mélangées à une limonade acidulée"
+  //   },
+  //   ingredients: {
+  //     en: ["Mixed berries", "Lemon juice", "Simple syrup", "Sparkling water", "Fresh berries"],
+  //     fr: ["Baies mélangées", "Jus de citron", "Sirop simple", "Eau pétillante", "Baies fraîches"]
+  //   },
+  //   category: "mocktail",
+  //   isAlcoholic: false,
+  //   image: "🫐"
+  // },
+  // {
+  //   id: 9,
+  //   name: "Cucumber Mint Cooler",
+  //   description: {
+  //     en: "Refreshing and hydrating summer drink",
+  //     fr: "Boisson d'été rafraîchissante et hydratante"
+  //   },
+  //   ingredients: {
+  //     en: ["Fresh cucumber", "Mint leaves", "Lime juice", "Honey", "Sparkling water"],
+  //     fr: ["Concombre frais", "Feuilles de menthe", "Jus de citron vert", "Miel", "Eau pétillante"]
+  //   },
+  //   category: "mocktail",
+  //   isAlcoholic: false,
+  //   image: "🥒"
+  // }
 ];
 
 export default function CocktailMenu() {
@@ -327,8 +358,14 @@ export default function CocktailMenu() {
               className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               {/* Cocktail Image */}
-              <div className="h-24 flex items-center justify-center text-6xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600">
-                {cocktail.image}
+              <div className="h-48 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600">
+                <Image
+                  src={cocktail.image}
+                  alt={cocktail.name}
+                  fill
+                  className="object-cover transition-transform duration-300 hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               </div>
 
               {/* Card Header */}
