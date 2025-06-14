@@ -156,36 +156,36 @@ const mockCocktails: Cocktail[] = [
     isAlcoholic: false,
     image: "/images/cocktails/mojito.png"
   },
-  // {
-  //   id: 8,
-  //   name: "Sparkling Berry Lemonade",
-  //   description: {
-  //     en: "Fresh berries mixed with tangy lemonade",
-  //     fr: "Baies fraîches mélangées à une limonade acidulée"
-  //   },
-  //   ingredients: {
-  //     en: ["Mixed berries", "Lemon juice", "Simple syrup", "Sparkling water", "Fresh berries"],
-  //     fr: ["Baies mélangées", "Jus de citron", "Sirop simple", "Eau pétillante", "Baies fraîches"]
-  //   },
-  //   category: "mocktail",
-  //   isAlcoholic: false,
-  //   image: "🫐"
-  // },
-  // {
-  //   id: 9,
-  //   name: "Cucumber Mint Cooler",
-  //   description: {
-  //     en: "Refreshing and hydrating summer drink",
-  //     fr: "Boisson d'été rafraîchissante et hydratante"
-  //   },
-  //   ingredients: {
-  //     en: ["Fresh cucumber", "Mint leaves", "Lime juice", "Honey", "Sparkling water"],
-  //     fr: ["Concombre frais", "Feuilles de menthe", "Jus de citron vert", "Miel", "Eau pétillante"]
-  //   },
-  //   category: "mocktail",
-  //   isAlcoholic: false,
-  //   image: "🥒"
-  // }
+  {
+    id: 9,
+    name: "Aegean Cooler",
+    description: {
+      en: "A refreshing blend of citrus and honey",
+      fr: "Un mélange rafraîchissant d'agrumes et de miel"
+    },
+    ingredients: {
+      en: ["Kitron liqueur", "Lemon juice", "Honey syrup", "Tonic water"],
+      fr: ["Liqueur de Kitron", "Jus de citron", "Sirop de miel", "Eau tonique"]
+    },
+    category: "signature",
+    isAlcoholic: true,
+    image: "/images/cocktails/aegean-cooler.png"
+  },
+  {
+    id: 10,
+    name: "Pineapple Chartreuse",
+    description: {
+      en: "A tropical twist with herbal notes",
+      fr: "Une touche tropicale avec des notes herbacées"
+    },
+    ingredients: {
+      en: ["Pineapple juice", "Green Chartreuse", "Lime juice", "Mint leaves"],
+      fr: ["Jus d'ananas", "Chartreuse verte", "Jus de citron vert", "Feuilles de menthe"]
+    },
+    category: "signature",
+    isAlcoholic: true,
+    image: "/images/cocktails/pineapple-chartreuse.png"
+  },
 ];
 
 export default function CocktailMenu() {
