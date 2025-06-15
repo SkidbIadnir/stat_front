@@ -38,14 +38,14 @@ const mockCocktails: Cocktail[] = [
   },
   {
     id: 2,
-    name: "Mojito",
+    name: "Dirty Mojito",
     description: {
-      en: "Fresh and minty Cuban cocktail with white rum",
-      fr: "Cocktail cubain frais et mentholé au rhum blanc"
+      en: "A bold twist on the classic mojito with added flavors",
+      fr: "Une version audacieuse du mojito classique avec des saveurs ajoutées"
     },
     ingredients: {
-      en: ["White rum", "Fresh mint leaves", "Lime juice", "Sugar", "Soda water"],
-      fr: ["Rhum blanc", "Feuilles de menthe fraîche", "Jus de citron vert", "Sucre", "Eau gazeuse"]
+      en: ["Aged rum", "Fresh mint leaves", "Lime juice", "Brown sugar", "Soda water", "Lime wheel"],
+      fr: ["Rhum vieilli", "Feuilles de menthe fraîche", "Jus de citron vert", "Sucre brun", "Eau gazeuse", "Rondelle de citron vert"]
     },
     category: "classic",
     isAlcoholic: true,
